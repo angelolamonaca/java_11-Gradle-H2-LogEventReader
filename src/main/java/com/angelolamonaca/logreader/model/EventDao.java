@@ -1,5 +1,6 @@
 package com.angelolamonaca.logreader.model;
 
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
@@ -15,6 +16,7 @@ import static com.angelolamonaca.logreader.utils.ExceptionLogger.logException;
  * @since 18/10/2021
  */
 @Slf4j
+@NoArgsConstructor
 public class EventDao {
     public int insertEvent(Event event) {
         String INSERT_EVENT_SQL = "INSERT INTO event (id, duration, type, host, alert) VALUES (?, ?, ?, ?, ?);";

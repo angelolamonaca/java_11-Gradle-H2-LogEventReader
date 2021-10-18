@@ -8,22 +8,5 @@ import com.angelolamonaca.logreader.model.Event;
  * @since 18/10/2021
  */
 public interface EventController {
-    void setEventId(Long id);
-    Long getEventId();
-
-    void setEventDuration(Integer duration);
-    Integer getEventDuration();
-
-    void setEventType(String type);
-    String getEventType();
-
-    void setEventHost(String host);
-    String getEventHost();
-
-    void setEventAlert(Boolean alert);
-    Boolean getEventAlert();
-
     int registerEvent(Event event);
-
-    void updateView();
 }
