@@ -1,10 +1,12 @@
 package com.angelolamonaca.logreader;
 
-import com.angelolamonaca.logreader.controller.EventControllerImpl;
-import com.angelolamonaca.logreader.model.Event;
-import com.angelolamonaca.logreader.view.EventView;
+import org.apache.commons.io.IOUtils;
 import org.h2.jdbcx.JdbcDataSource;
+import org.json.JSONArray;
 
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Scanner;
 
 import static com.angelolamonaca.logreader.data.DataSource.createDataSource;
@@ -18,14 +20,10 @@ public class Main {
     public static JdbcDataSource ds;
 
     public static void main(String... args) {
-        //String logFilePath = input();
-        String logFilePath = "/external_log.txt";
+        String logFilePath = input();
         ds = createDataSource();
-        Event model = retrieveEventFromDatabase();
-        EventView view = new EventView();
-        EventControllerImpl controller = new EventControllerImpl(model, view);
-        controller.updateView();
-
+        JSONArray jsonArray = fileToJsonArray(logFilePath);
+        System.out.println(jsonArray.getString(0));
     }
 
     static String input() {
@@ -34,7 +32,18 @@ public class Main {
         return sc.nextLine();
     }
 
-    private static Event retrieveEventFromDatabase() {
-        return new Event(1L, 12345);
+    static JSONArray fileToJsonArray(String logFilePath) {
+        try {
+            File file = new File(logFilePath);
+            if (file.exists()) {
+                InputStream inputStream = new FileInputStream(logFilePath);
+                String fileAsString = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+                String[] test = fileAsString.split("(?=\\{)");
+                return new JSONArray(Arrays.asList(test));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new JSONArray();
     }
 }
