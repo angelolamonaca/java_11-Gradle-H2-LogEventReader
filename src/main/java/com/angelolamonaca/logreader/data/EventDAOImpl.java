@@ -2,14 +2,12 @@ package com.angelolamonaca.logreader.data;
 
 
 import com.angelolamonaca.logreader.entity.Event;
-import com.angelolamonaca.logreader.utils.HibernateUtil;
+import com.angelolamonaca.logreader.entity.EventMap;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-
-import java.util.List;
 
 /**
  * @author Angelo Lamonaca (https://www.angelolamonaca.com/)
@@ -18,32 +16,16 @@ import java.util.List;
  */
 @Slf4j
 @Data
+@AllArgsConstructor
 public class EventDAOImpl implements EventDAO {
-    private final Session session;
+    private final SessionFactory sessionFactory;
 
-    public EventDAOImpl(Session session) {
-        this.session = session;
+    @Override
+    public void addEvents(EventMap eventMap) {
+        Session session = sessionFactory.openSession();
         session.beginTransaction();
-    }
-
-    @Override
-    public void addEvent(Event e) {
-        session.persist(e);
-        log.info("Event {} saved successfully", e.getId());
+        eventMap.forEach((eventId, eventDetails) -> session.persist(new Event(eventId, eventDetails)));
         session.getTransaction().commit();
         session.close();
-    }
-
-    @Override
-    public void updateEvent(Event e) {
-        session.persist(e);
-        log.info("Event {} updated successfully", e.getId());
-        session.getTransaction().commit();
-        session.close();
-    }
-
-    @Override
-    public List<Event> listEvents() {
-        return session.createQuery("SELECT a FROM Event a", Event.class).getResultList();
     }
 }

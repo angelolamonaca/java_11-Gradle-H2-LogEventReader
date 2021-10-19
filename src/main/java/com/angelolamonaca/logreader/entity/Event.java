@@ -2,6 +2,7 @@ package com.angelolamonaca.logreader.entity;
 
 import lombok.*;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -19,9 +20,7 @@ public class Event {
     @Id
     @NonNull
     private String id;
-    @NonNull
-    private Long duration;
-    private String type;
-    private String host;
-    private Boolean alert;
+
+    @Embedded
+    private EventDetails eventDetails;
 }

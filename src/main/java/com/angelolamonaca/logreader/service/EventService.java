@@ -1,6 +1,6 @@
 package com.angelolamonaca.logreader.service;
 
-import com.angelolamonaca.logreader.entity.Event;
+import com.angelolamonaca.logreader.entity.EventMap;
 
 /**
  * @author Angelo Lamonaca (https://www.angelolamonaca.com/)
@@ -8,5 +8,5 @@ import com.angelolamonaca.logreader.entity.Event;
  * @since 18/10/2021
  */
 public interface EventService {
-    void registerEvent(Event event);
+    void registerEvents(EventMap eventMap);
 }

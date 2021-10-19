@@ -1,5 +1,6 @@
 package com.angelolamonaca.logreader.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
@@ -18,14 +19,17 @@ public class EventLog {
     @NonNull
     @JsonProperty
     private String id;
-    @NonNull
-    @JsonProperty
-    private EventLogState state;
+
     @NonNull
     @JsonProperty
     private Timestamp timestamp;
+
+    @JsonIgnore
+    private String state;
+
     @JsonProperty
     private String type;
+
     @JsonProperty
     private String host;
 }

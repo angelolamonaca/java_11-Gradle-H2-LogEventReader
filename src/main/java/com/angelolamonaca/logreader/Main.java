@@ -1,7 +1,9 @@
 package com.angelolamonaca.logreader;
 
 import com.angelolamonaca.logreader.entity.EventMap;
+import com.angelolamonaca.logreader.service.EventServiceImpl;
 import com.angelolamonaca.logreader.service.LogFileServiceImpl;
+import com.angelolamonaca.logreader.utils.HibernateUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Scanner;
@@ -19,6 +21,9 @@ public class Main {
         LogFileServiceImpl logFileService = new LogFileServiceImpl();
         String[] logsAsStringArray = logFileService.extractLogsFromFile(logFilePath);
         EventMap eventMap = EventMap.of(logsAsStringArray);
+        EventServiceImpl eventService = new EventServiceImpl();
+        eventService.registerEvents(eventMap);
+        HibernateUtil.shutdown();
     }
 
     static String input() {
