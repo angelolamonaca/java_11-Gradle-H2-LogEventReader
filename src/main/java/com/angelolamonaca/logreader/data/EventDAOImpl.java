@@ -2,6 +2,7 @@ package com.angelolamonaca.logreader.data;
 
 
 import com.angelolamonaca.logreader.entity.Event;
+import com.angelolamonaca.logreader.utils.HibernateUtil;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,27 +18,32 @@ import java.util.List;
  */
 @Slf4j
 @Data
-@RequiredArgsConstructor
 public class EventDAOImpl implements EventDAO {
-    private final SessionFactory sessionFactory;
+    private final Session session;
+
+    public EventDAOImpl(Session session) {
+        this.session = session;
+        session.beginTransaction();
+    }
 
     @Override
     public void addEvent(Event e) {
-        Session session = this.sessionFactory.getCurrentSession();
         session.persist(e);
-        log.info("Event {} saved successfully" + e.getId());
+        log.info("Event {} saved successfully", e.getId());
+        session.getTransaction().commit();
+        session.close();
     }
 
     @Override
     public void updateEvent(Event e) {
-        Session session = this.sessionFactory.getCurrentSession();
-        session.update(e);
-        log.info("Event {} updated successfully" + e.getId());
+        session.persist(e);
+        log.info("Event {} updated successfully", e.getId());
+        session.getTransaction().commit();
+        session.close();
     }
 
     @Override
     public List<Event> listEvents() {
-        Session session = this.sessionFactory.getCurrentSession();
         return session.createQuery("SELECT a FROM Event a", Event.class).getResultList();
     }
 }

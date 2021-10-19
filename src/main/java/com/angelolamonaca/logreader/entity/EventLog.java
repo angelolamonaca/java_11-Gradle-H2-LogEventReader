@@ -1,6 +1,9 @@
 package com.angelolamonaca.logreader.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+
+import java.sql.Timestamp;
 
 /**
  * @author Angelo Lamonaca (https://www.angelolamonaca.com/)
@@ -8,15 +11,21 @@ import lombok.*;
  * @since 19/10/2021
  */
 @Data
+@NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class EventLog {
     @NonNull
+    @JsonProperty
     private String id;
     @NonNull
+    @JsonProperty
     private EventLogState state;
     @NonNull
-    private Integer timestamp;
+    @JsonProperty
+    private Timestamp timestamp;
+    @JsonProperty
     private String type;
+    @JsonProperty
     private String host;
 }

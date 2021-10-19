@@ -1,9 +1,9 @@
 package com.angelolamonaca.logreader.service;
 
+import com.angelolamonaca.logreader.data.EventDAOImpl;
 import com.angelolamonaca.logreader.entity.Event;
 import com.angelolamonaca.logreader.utils.HibernateUtil;
 import lombok.NoArgsConstructor;
-import org.hibernate.Session;
 
 /**
  * @author Angelo Lamonaca (https://www.angelolamonaca.com/)
@@ -12,15 +12,11 @@ import org.hibernate.Session;
  */
 @NoArgsConstructor
 public class EventServiceImpl implements EventService {
+    EventDAOImpl eventDAO = new EventDAOImpl(HibernateUtil.getSessionFactory().openSession());
 
     @Override
-    public void registerEvent(Event event) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-
-        Event e = new Event("asdasd", 350, "test", "test", true);
-        session.save(e);
-        session.getTransaction().commit();
+    public void registerEvent(Event e) {
+        eventDAO.addEvent(e);
         HibernateUtil.shutdown();
     }
 }

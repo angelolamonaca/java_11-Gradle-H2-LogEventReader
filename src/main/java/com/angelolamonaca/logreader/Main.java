@@ -1,7 +1,8 @@
 package com.angelolamonaca.logreader;
 
-import com.angelolamonaca.logreader.service.EventServiceImpl;
-import com.angelolamonaca.logreader.entity.Event;
+import com.angelolamonaca.logreader.entity.EventLog;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 
@@ -10,7 +11,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Scanner;
 
 /**
@@ -18,14 +19,12 @@ import java.util.Scanner;
  * @version 1.0
  * @since 18/10/2021
  */
+@Slf4j
 public class Main {
     public static void main(String... args) {
-        String logFilePath = input();
-        // src/main/resources/external_log.json
-        JSONArray jsonArray = fileToJsonArray(logFilePath);
-        System.out.println(jsonArray.getString(0));
-        EventServiceImpl eventController = new EventServiceImpl();
-        Event e = new Event("asdasd",350,"test","test", true);
+//        String logFilePath = input();
+        String logFilePath = "src/main/resources/external_log.json";
+        HashSet<EventLog> eventLogs = fileToEventLogs(logFilePath);
     }
 
     static String input() {
@@ -34,18 +33,25 @@ public class Main {
         return sc.nextLine();
     }
 
-    static JSONArray fileToJsonArray(String logFilePath) {
+    static HashSet<EventLog> fileToEventLogs(String logFilePath) {
+        HashSet<EventLog> eventLogs = null;
         try {
             File file = new File(logFilePath);
             if (file.exists()) {
                 InputStream inputStream = new FileInputStream(logFilePath);
-                String fileAsString = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-                String[] test = fileAsString.split("(?=\\{)");
-                return new JSONArray(Arrays.asList(test));
+                String logFileAsString = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+                String[] eventLogsAsStrings = logFileAsString.split("(?=\\{)");
+                eventLogs = new HashSet<>();
+                for (String eventLogAsString : eventLogsAsStrings) {
+                    eventLogs.add(new ObjectMapper().readValue(eventLogAsString, EventLog.class));
+                }
+                return eventLogs;
+            } else {
+                log.error("Log File in {} not found", logFilePath);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new JSONArray();
+        return eventLogs;
     }
 }
