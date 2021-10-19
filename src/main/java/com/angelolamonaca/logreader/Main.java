@@ -23,7 +23,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String... args) {
 //        String logFilePath = input();
-        String logFilePath = "src/main/resources/external_log.json";
+        String logFilePath = "src/main/resources/external_log";
         HashSet<EventLog> eventLogs = fileToEventLogs(logFilePath);
     }
 
