@@ -11,7 +11,7 @@ import javax.persistence.Id;
  * @since 18/10/2021
  */
 @Entity
-@Data
+@Getter
 @NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor
@@ -20,7 +20,7 @@ public class Event {
     @NonNull
     private String id;
     @NonNull
-    private Integer duration;
+    private Long duration;
     private String type;
     private String host;
     private Boolean alert;
