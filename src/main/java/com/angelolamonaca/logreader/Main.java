@@ -1,15 +1,17 @@
 package com.angelolamonaca.logreader;
 
+import com.angelolamonaca.logreader.service.EventServiceImpl;
+import com.angelolamonaca.logreader.entity.Event;
 import org.apache.commons.io.IOUtils;
-import org.h2.jdbcx.JdbcDataSource;
 import org.json.JSONArray;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Scanner;
-
-import static com.angelolamonaca.logreader.data.DataSource.createDataSource;
 
 /**
  * @author Angelo Lamonaca (https://www.angelolamonaca.com/)
@@ -17,13 +19,13 @@ import static com.angelolamonaca.logreader.data.DataSource.createDataSource;
  * @since 18/10/2021
  */
 public class Main {
-    public static JdbcDataSource ds;
-
     public static void main(String... args) {
         String logFilePath = input();
-        ds = createDataSource();
+        // src/main/resources/external_log.json
         JSONArray jsonArray = fileToJsonArray(logFilePath);
         System.out.println(jsonArray.getString(0));
+        EventServiceImpl eventController = new EventServiceImpl();
+        Event e = new Event("asdasd",350,"test","test", true);
     }
 
     static String input() {

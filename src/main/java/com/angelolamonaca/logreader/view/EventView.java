@@ -1,6 +1,6 @@
 package com.angelolamonaca.logreader.view;
 
-import com.angelolamonaca.logreader.model.Event;
+import com.angelolamonaca.logreader.entity.Event;
 import lombok.extern.slf4j.Slf4j;
 
 /**
