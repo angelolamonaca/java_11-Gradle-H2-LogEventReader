@@ -26,11 +26,12 @@ public class EventLogDAOImpl implements EventLogDAO {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         try {
+            log.debug("Mapping EventLog object from string log");
             EventLog eventLog = new ObjectMapper().readValue(eventLogAsString, EventLog.class);
             session.persist(eventLog);
             session.getTransaction().commit();
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         session.close();
     }

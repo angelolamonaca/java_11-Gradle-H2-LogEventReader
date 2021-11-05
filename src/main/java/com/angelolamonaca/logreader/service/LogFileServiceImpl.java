@@ -3,6 +3,7 @@ package com.angelolamonaca.logreader.service;
 import com.angelolamonaca.logreader.concurrent.RunnableLogArchiver;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,6 +17,7 @@ import java.util.concurrent.ExecutorService;
  * @version 1.0
  * @since 19/10/2021
  */
+@Slf4j
 @AllArgsConstructor
 public class LogFileServiceImpl implements LogFileService {
     @NonNull
@@ -23,6 +25,7 @@ public class LogFileServiceImpl implements LogFileService {
 
     @Override
     public void storeLogs(String logFilePath) {
+        log.debug("Scanning file");
         scanFile(logFilePath);
     }
 
@@ -33,15 +36,17 @@ public class LogFileServiceImpl implements LogFileService {
         try {
             File file = new File(logFilePath);
             if (!file.exists()) {
-                throw new Exception("File not found");
+                throw new Exception("File is not valid");
             }
             inputStream = new FileInputStream(logFilePath);
             scanner = new Scanner(inputStream, StandardCharsets.UTF_8);
             StringBuilder eventLogAsString = new StringBuilder();
+            log.debug("Reading logs from file");
             while (scanner.hasNextLine()) {
                 String eventLogLine = scanner.nextLine();
                 eventLogAsString.append(eventLogLine);
                 if (eventLogAsString.toString().contains("}")) {
+                    log.debug("Starting log archiver thread for {}", eventLogAsString);
                     runLogArchiverThread(eventLogAsString.toString());
                     eventLogAsString.setLength(0);
                 }
@@ -49,14 +54,14 @@ public class LogFileServiceImpl implements LogFileService {
             if (scanner.ioException() != null) {
                 throw scanner.ioException();
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         } finally {
             if (inputStream != null) {
                 try {
                     inputStream.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.error(e.getMessage(), e);
                 }
             }
             if (scanner != null) {

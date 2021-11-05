@@ -14,6 +14,7 @@ public class Main {
     public static void main(String... args) {
         // String logFilePath = askForLogFilePath();
         String logFilePath = "src/main/resources/log";
+        log.info("Log file path: {}",logFilePath);
         executeLogReader(logFilePath);
     }
 
@@ -26,6 +27,7 @@ public class Main {
     }
 
     static void executeLogReader(String logFilePath) {
+        log.debug("Executing LogReader");
         LogReader logReader = new LogReader();
         logReader.storeLogsToDatabase(logFilePath);
     }

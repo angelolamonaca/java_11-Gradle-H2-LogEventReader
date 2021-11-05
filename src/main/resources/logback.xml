@@ -14,8 +14,8 @@
         </encoder>
     </appender>
 
-    <logger name="org.hibernate.SQL" level="OFF"/>
-    <logger name="org.hibernate.type" level="OFF"/>
+    <logger name="org.hibernate.SQL" level="DEBUG"/>
+    <logger name="org.hibernate.type" level="DEBUG"/>
 
     <root level="info">
         <appender-ref ref="console"/>
