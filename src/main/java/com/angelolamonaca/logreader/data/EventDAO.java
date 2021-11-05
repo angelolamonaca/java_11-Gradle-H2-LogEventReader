@@ -1,6 +1,6 @@
 package com.angelolamonaca.logreader.data;
 
-import com.angelolamonaca.logreader.entity.EventMap;
+import com.angelolamonaca.logreader.entity.Event;
 
 /**
  * @author Angelo Lamonaca (https://www.angelolamonaca.com/)
@@ -8,5 +8,5 @@ import com.angelolamonaca.logreader.entity.EventMap;
  * @since 19/10/2021
  */
 public interface EventDAO {
-    void addEvents (EventMap eventMap);
+    void addEvent(Event event);
 }
