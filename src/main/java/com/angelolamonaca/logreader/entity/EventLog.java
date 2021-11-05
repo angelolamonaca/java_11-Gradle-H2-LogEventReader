@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.sql.Timestamp;
 
 /**
@@ -11,20 +15,27 @@ import java.sql.Timestamp;
  * @version 1.0
  * @since 19/10/2021
  */
-@Data
+@Entity
+@Getter
 @NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class EventLog {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
+    private long id;
+
     @NonNull
-    @JsonProperty
-    private String id;
+    @JsonProperty("id")
+    private String eventLogId;
 
     @NonNull
     @JsonProperty
     private Timestamp timestamp;
 
-    @JsonIgnore
+    @NonNull
+    @JsonProperty
     private String state;
 
     @JsonProperty
