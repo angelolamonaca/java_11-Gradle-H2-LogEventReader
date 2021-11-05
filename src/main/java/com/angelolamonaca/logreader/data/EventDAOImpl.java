@@ -2,7 +2,6 @@ package com.angelolamonaca.logreader.data;
 
 
 import com.angelolamonaca.logreader.entity.Event;
-import com.angelolamonaca.logreader.entity.EventMap;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -21,10 +20,10 @@ public class EventDAOImpl implements EventDAO {
     private final SessionFactory sessionFactory;
 
     @Override
-    public void addEvents(EventMap eventMap) {
+    public void addEvent(Event event) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        eventMap.forEach((eventId, eventDetails) -> session.persist(new Event(eventId, eventDetails)));
+        session.persist(event);
         session.getTransaction().commit();
         session.close();
     }

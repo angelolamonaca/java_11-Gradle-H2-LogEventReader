@@ -1,7 +1,7 @@
 package com.angelolamonaca.logreader.service;
 
 import com.angelolamonaca.logreader.data.EventDAOImpl;
-import com.angelolamonaca.logreader.entity.EventMap;
+import com.angelolamonaca.logreader.entity.Event;
 import com.angelolamonaca.logreader.utils.HibernateUtil;
 import lombok.NoArgsConstructor;
 
@@ -15,7 +15,7 @@ public class EventServiceImpl implements EventService {
     EventDAOImpl eventDAO = new EventDAOImpl(HibernateUtil.getSessionFactory());
 
     @Override
-    public void registerEvents(EventMap eventMap) {
-        eventDAO.addEvents(eventMap);
+    public void registerEvent(Event event) {
+        eventDAO.addEvent(event);
     }
 }
