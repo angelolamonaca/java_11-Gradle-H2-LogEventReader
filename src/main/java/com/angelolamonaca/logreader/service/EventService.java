@@ -2,6 +2,8 @@ package com.angelolamonaca.logreader.service;
 
 import com.angelolamonaca.logreader.entity.Event;
 
+import java.util.List;
+
 /**
  * @author Angelo Lamonaca (https://www.angelolamonaca.com/)
  * @version 1.0
@@ -9,4 +11,5 @@ import com.angelolamonaca.logreader.entity.Event;
  */
 public interface EventService {
     void registerEvent(Event event);
+    List<Event> retrieveEvents();
 }

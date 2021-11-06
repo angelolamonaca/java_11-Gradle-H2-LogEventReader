@@ -1,17 +1,14 @@
 package com.angelolamonaca.logreader.data;
 
+import com.angelolamonaca.logreader.entity.Event;
 import com.angelolamonaca.logreader.entity.EventLog;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.IdentifierLoadAccess;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
-import org.hibernate.query.internal.QueryImpl;
 
 import javax.persistence.TypedQuery;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,6 +42,33 @@ public class EventLogDAOImpl implements EventLogDAO {
         session.close();
         assert eventLogs != null;
         return eventLogs.get(0);
+    }
+
+    @Override
+    public List<Event> getEvents() {
+        Session session = sessionFactory.openSession();
+        List<Event> eventLogs = null;
+        List<Event> events = null;
+        try {
+            session.beginTransaction();
+            log.debug("Attempting to load EventLog from DB");
+            TypedQuery<Event> query = session.createNativeQuery(
+                    "select e.EVENTLOGID as ID, " +
+                            "e.HOST, " +
+                            "e.TYPE, " +
+                            "abs(extract(millisecond from (e.TIMESTAMP - el.TIMESTAMP))) as DURATION, " +
+                            "abs(extract(millisecond from (e.TIMESTAMP - el.TIMESTAMP))) > 5  as ALERT " +
+                            "from EVENTLOG e INNER JOIN EVENTLOG el ON e.EVENTLOGID=el.EVENTLOGID " +
+                            "where e.STATE=0 and el.STATE=1;", Event.class);
+            eventLogs = query.getResultList();
+//            events = eventLogs.stream().map(eventLog -> new Event(eventLog.getEventLogId())).collect(Collectors.toList());
+            session.getTransaction().commit();
+            log.debug("EventLogs successful loaded from DB {}", eventLogs);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        session.close();
+        return eventLogs;
     }
 
     @Override

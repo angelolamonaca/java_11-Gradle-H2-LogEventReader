@@ -1,5 +1,6 @@
 package com.angelolamonaca.logreader.data;
 
+import com.angelolamonaca.logreader.entity.Event;
 import com.angelolamonaca.logreader.entity.EventLog;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
  */
 public interface EventLogDAO {
     EventLog getEventLog();
+    List<Event> getEvents();
     List<EventLog> getEventLogs(String id);
     void addEventLog(EventLog eventLog);
 }
