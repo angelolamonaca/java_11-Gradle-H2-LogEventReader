@@ -39,7 +39,7 @@ public class EventLogDAOImpl implements EventLogDAO {
                             "where e.STATE=0 and el.STATE=1", Event.class);
             query.setFirstResult(0);
             query.setMaxResults(1);
-            if (query.getResultList().size()==0) {
+            if (query.getResultList().size() == 0) {
                 log.debug("No more event logs in table EventLog");
                 return null;
             }
@@ -80,7 +80,11 @@ public class EventLogDAOImpl implements EventLogDAO {
             query.setParameter("eventLogId", eventLogId);
             deleted = query.executeUpdate();
             session.getTransaction().commit();
-            log.debug("EventLog successful deleted from DB {}", eventLogId);
+            if (deleted > 0) {
+                log.debug("EventLog {} successful deleted from DB", eventLogId);
+            } else {
+                log.error("EventLog {} not deleted from DB", eventLogId);
+            }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
