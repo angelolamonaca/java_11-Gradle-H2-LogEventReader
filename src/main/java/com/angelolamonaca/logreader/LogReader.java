@@ -1,20 +1,13 @@
 package com.angelolamonaca.logreader;
 
 import com.angelolamonaca.logreader.entity.Event;
-import com.angelolamonaca.logreader.entity.EventDetails;
-import com.angelolamonaca.logreader.entity.EventLog;
 import com.angelolamonaca.logreader.service.EventLogServiceImpl;
 import com.angelolamonaca.logreader.service.EventServiceImpl;
 import com.angelolamonaca.logreader.service.LogFileServiceImpl;
 import com.angelolamonaca.logreader.utils.HibernateUtil;
 import lombok.extern.slf4j.Slf4j;
 
-import java.time.Duration;
-import java.time.Instant;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * @author Angelo Lamonaca (https://www.angelolamonaca.com/)
@@ -24,32 +17,51 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class LogReader {
     int hibernatePoolSize = Integer.parseInt(HibernateUtil.getProperties().getProperty("hibernate.connection.pool_size"));
-    ExecutorService logFileExecutorService = Executors.newFixedThreadPool(hibernatePoolSize);
+    ExecutorService logFileExecutor = Executors.newFixedThreadPool(hibernatePoolSize);
+    ExecutorService eventExecutor = Executors.newFixedThreadPool(hibernatePoolSize);
 
+    void execute(String logFilePath) {
+        log.debug("Executing LogReader {}", this);
+        storeLogsToDatabase(logFilePath);
+        convertEventLogsToEvents();
+    }
 
     void storeLogsToDatabase(String logFilePath) {
         try {
-            LogFileServiceImpl logFileService = new LogFileServiceImpl(logFileExecutorService);
+            LogFileServiceImpl logFileService = new LogFileServiceImpl(logFileExecutor);
             logFileService.storeLogs(logFilePath);
-            logFileExecutorService.shutdown();
-            if (!logFileExecutorService.awaitTermination(1, TimeUnit.HOURS)) {
-                logFileExecutorService.shutdownNow();
+            logFileExecutor.shutdown();
+            if (!logFileExecutor.awaitTermination(1, TimeUnit.HOURS)) {
+                logFileExecutor.shutdownNow();
             }
         } catch (InterruptedException e) {
             log.error(e.getMessage(), e);
         }
     }
 
-    String calculateAndStoreEvents() {
-        EventServiceImpl eventService = new EventServiceImpl();
-        Event event = eventService.retrieveEvent();
-        if (event == null) return null;
-        eventService.registerEvent(event);
-        return event.getId();
-    }
+    void convertEventLogsToEvents() {
+        EventServiceImpl eventService = new EventServiceImpl(eventExecutor);
+        EventLogServiceImpl eventLogService = new EventLogServiceImpl(eventExecutor);
 
-    int removeEventLogFromDatabase(String eventLogId) {
-        EventLogServiceImpl eventLogService = new EventLogServiceImpl();
-        return eventLogService.removeEventLogById(eventLogId);
+        try {
+            while (true) {
+                Future<?> eventRetrieverFuture = eventService.runThreadEventRetriever();
+                Event event = (Event) eventRetrieverFuture.get();
+                if (event == null) {
+                    log.debug("Exiting...");
+                    break;
+                }
+                Future<?> eventRegistererFuture = eventService.runThreadEventRegisterer(event);
+                Future<?> eventLogRemoverFuture = eventLogService.runThreadEventLogRemover(event.getId());
+                Integer eventLogsRemoved = (Integer) eventLogRemoverFuture.get();
+                log.debug("Removed {} EventLogs from DB", eventLogsRemoved);
+            }
+            eventExecutor.shutdown();
+            if (!eventExecutor.awaitTermination(1, TimeUnit.HOURS)) {
+                eventExecutor.shutdownNow();
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            log.error(e.getMessage(), e);
+        }
     }
 }

@@ -4,6 +4,7 @@ import com.angelolamonaca.logreader.entity.Event;
 import com.angelolamonaca.logreader.entity.EventLog;
 
 import java.util.List;
+import java.util.concurrent.Future;
 
 /**
  * @author Angelo Lamonaca (https://www.angelolamonaca.com/)
@@ -12,5 +13,5 @@ import java.util.List;
  */
 public interface EventLogService {
     void registerEventLog(EventLog eventLog);
-    int removeEventLogById(String eventLogId);
+    Future<?> runThreadEventLogRemover(String eventLogId);
 }

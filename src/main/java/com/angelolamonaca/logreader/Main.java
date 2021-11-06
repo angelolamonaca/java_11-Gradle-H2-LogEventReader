@@ -15,7 +15,7 @@ public class Main {
         // String logFilePath = askForLogFilePath();
         String logFilePath = "src/main/resources/log";
         log.info("Log file path: {}", logFilePath);
-        executeLogReader(logFilePath);
+        new LogReader().execute(logFilePath);
     }
 
     static String askForLogFilePath() {
@@ -24,19 +24,5 @@ public class Main {
         String input = sc.nextLine();
         sc.close();
         return input;
-    }
-
-    static void executeLogReader(String logFilePath) {
-        LogReader logReader = new LogReader();
-        log.debug("Executing LogReader {}", logReader);
-        logReader.storeLogsToDatabase(logFilePath);
-        while (true) {
-            String eventId = logReader.calculateAndStoreEvents();
-            if (eventId==null) {
-                log.debug("Exiting...");
-                break;
-            }
-            logReader.removeEventLogFromDatabase(eventId);
-        }
     }
 }
