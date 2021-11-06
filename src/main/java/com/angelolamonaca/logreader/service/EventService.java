@@ -2,7 +2,6 @@ package com.angelolamonaca.logreader.service;
 
 import com.angelolamonaca.logreader.entity.Event;
 
-import java.util.List;
 import java.util.concurrent.Future;
 
 /**
@@ -12,6 +11,8 @@ import java.util.concurrent.Future;
  */
 public interface EventService {
     Future<?> runThreadEventRegisterer(Event event);
+
     Future<?> runThreadEventRetriever();
+
     Event retrieveEvent();
 }

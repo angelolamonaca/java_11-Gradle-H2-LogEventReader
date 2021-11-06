@@ -1,9 +1,6 @@
 package com.angelolamonaca.logreader.concurrent;
 
 import com.angelolamonaca.logreader.data.EventLogDAOImpl;
-import com.angelolamonaca.logreader.entity.Event;
-import com.angelolamonaca.logreader.entity.EventLog;
-import com.angelolamonaca.logreader.service.EventLogServiceImpl;
 import com.angelolamonaca.logreader.utils.HibernateUtil;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -33,5 +30,11 @@ public class ThreadEventLogRemover implements Callable<Integer> {
     public Integer call() {
         log.debug("Starting {}", this);
         return eventLogDAO.deleteEventLogById(eventLogId);
+    }
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + ", " +
+                "thread name: " + threadName;
     }
 }

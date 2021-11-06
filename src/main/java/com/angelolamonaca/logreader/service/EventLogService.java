@@ -1,9 +1,7 @@
 package com.angelolamonaca.logreader.service;
 
-import com.angelolamonaca.logreader.entity.Event;
 import com.angelolamonaca.logreader.entity.EventLog;
 
-import java.util.List;
 import java.util.concurrent.Future;
 
 /**
@@ -13,5 +11,6 @@ import java.util.concurrent.Future;
  */
 public interface EventLogService {
     void registerEventLog(EventLog eventLog);
+
     Future<?> runThreadEventLogRemover(String eventLogId);
 }

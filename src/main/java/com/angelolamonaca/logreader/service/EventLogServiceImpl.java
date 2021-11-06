@@ -2,7 +2,6 @@ package com.angelolamonaca.logreader.service;
 
 import com.angelolamonaca.logreader.concurrent.ThreadEventLogRemover;
 import com.angelolamonaca.logreader.data.EventLogDAOImpl;
-import com.angelolamonaca.logreader.entity.Event;
 import com.angelolamonaca.logreader.entity.EventLog;
 import com.angelolamonaca.logreader.utils.HibernateUtil;
 import lombok.NoArgsConstructor;

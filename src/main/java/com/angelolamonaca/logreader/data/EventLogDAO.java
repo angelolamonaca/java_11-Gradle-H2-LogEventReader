@@ -3,8 +3,6 @@ package com.angelolamonaca.logreader.data;
 import com.angelolamonaca.logreader.entity.Event;
 import com.angelolamonaca.logreader.entity.EventLog;
 
-import java.util.List;
-
 /**
  * @author Angelo Lamonaca (https://www.angelolamonaca.com/)
  * @version 1.0
@@ -12,6 +10,8 @@ import java.util.List;
  */
 public interface EventLogDAO {
     Event getEvent();
+
     void addEventLog(EventLog eventLog);
+
     int deleteEventLogById(String eventLogId);
 }

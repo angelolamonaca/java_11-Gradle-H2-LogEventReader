@@ -1,19 +1,15 @@
 package com.angelolamonaca.logreader.service;
 
-import com.angelolamonaca.logreader.concurrent.ThreadEventLogRemover;
 import com.angelolamonaca.logreader.concurrent.ThreadEventRegisterer;
 import com.angelolamonaca.logreader.concurrent.ThreadEventRetriever;
-import com.angelolamonaca.logreader.data.EventDAOImpl;
 import com.angelolamonaca.logreader.data.EventLogDAOImpl;
 import com.angelolamonaca.logreader.entity.Event;
-import com.angelolamonaca.logreader.entity.EventLog;
 import com.angelolamonaca.logreader.utils.HibernateUtil;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
