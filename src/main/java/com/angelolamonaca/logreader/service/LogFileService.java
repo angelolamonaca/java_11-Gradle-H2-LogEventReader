@@ -7,5 +7,6 @@ package com.angelolamonaca.logreader.service;
  */
 public interface LogFileService {
     void scanFile(String logFilePath);
+
     void storeLogs(String logFilePath);
 }

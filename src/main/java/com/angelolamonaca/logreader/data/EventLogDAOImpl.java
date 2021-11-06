@@ -1,8 +1,6 @@
 package com.angelolamonaca.logreader.data;
 
 import com.angelolamonaca.logreader.entity.EventLog;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -22,12 +20,10 @@ public class EventLogDAOImpl implements EventLogDAO {
     private final SessionFactory sessionFactory;
 
     @Override
-    public void addEventLog(String eventLogAsString) {
+    public void addEventLog(EventLog eventLog) {
         Session session = sessionFactory.openSession();
         try {
             session.beginTransaction();
-            log.debug("Mapping EventLog object from string log {}", eventLogAsString);
-            EventLog eventLog = new ObjectMapper().readValue(eventLogAsString, EventLog.class);
             log.debug("Attempting to insert EventLog {} into DB", eventLog);
             session.persist(eventLog);
             session.getTransaction().commit();

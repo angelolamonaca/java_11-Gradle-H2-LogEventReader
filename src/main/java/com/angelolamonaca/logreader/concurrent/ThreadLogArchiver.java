@@ -1,7 +1,7 @@
 package com.angelolamonaca.logreader.concurrent;
 
-import com.angelolamonaca.logreader.data.EventLogDAOImpl;
-import com.angelolamonaca.logreader.utils.HibernateUtil;
+import com.angelolamonaca.logreader.entity.EventLog;
+import com.angelolamonaca.logreader.service.EventLogServiceImpl;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -16,10 +16,10 @@ import lombok.extern.slf4j.Slf4j;
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class ThreadLogArchiver extends Thread {
-    EventLogDAOImpl eventLogDAO = new EventLogDAOImpl(HibernateUtil.getSessionFactory());
+    EventLogServiceImpl eventLogService = new EventLogServiceImpl();
 
     @NonNull
-    private String eventLogAsString;
+    private EventLog eventLog;
 
     @NonNull
     private String threadName;
@@ -27,7 +27,7 @@ public class ThreadLogArchiver extends Thread {
     @Override
     public void run() {
         log.debug("Starting {}", this);
-        eventLogDAO.addEventLog(this.eventLogAsString);
+        eventLogService.registerEventLog(this.eventLog);
     }
 
     @Override

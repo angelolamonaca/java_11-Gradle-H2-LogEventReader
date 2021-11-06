@@ -33,6 +33,6 @@ public class LogReader {
     }
 
     void calculateAndStoreEvents() {
-        log.info("CIAO");
+
     }
 }

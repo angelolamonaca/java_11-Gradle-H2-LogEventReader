@@ -1,6 +1,8 @@
 package com.angelolamonaca.logreader.service;
 
 import com.angelolamonaca.logreader.concurrent.ThreadLogArchiver;
+import com.angelolamonaca.logreader.entity.EventLog;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +48,9 @@ public class LogFileServiceImpl implements LogFileService {
                 String eventLogLine = scanner.nextLine();
                 eventLogAsString.append(eventLogLine);
                 if (eventLogAsString.toString().contains("}")) {
-                    runLogArchiverThread(eventLogAsString.toString());
+                    log.debug("Mapping EventLog object from string log {}", eventLogAsString);
+                    EventLog eventLog = new ObjectMapper().readValue(eventLogAsString.toString(), EventLog.class);
+                    runLogArchiverThread(eventLog);
                     eventLogAsString.setLength(0);
                 }
             }
@@ -69,9 +73,9 @@ public class LogFileServiceImpl implements LogFileService {
         }
     }
 
-    private void runLogArchiverThread(String eventLogAsString) {
-        ThreadLogArchiver threadLogArchiver = new ThreadLogArchiver(eventLogAsString, "Thread Log Archiver");
+    private void runLogArchiverThread(EventLog eventLog) {
+        ThreadLogArchiver threadLogArchiver = new ThreadLogArchiver(eventLog, "Thread Log Archiver");
         logFileExecutorService.submit(threadLogArchiver);
-        log.debug("Submitted new {} for {}", threadLogArchiver, eventLogAsString);
+        log.debug("Submitted new {} for {}", threadLogArchiver, eventLog);
     }
 }

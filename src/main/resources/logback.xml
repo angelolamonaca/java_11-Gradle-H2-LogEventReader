@@ -14,7 +14,7 @@
         </encoder>
     </appender>
 
-    <logger name="org.hibernate" level="INFO" />
+    <logger name="org.hibernate" level="INFO"/>
     <logger name="org.hibernate.SQL" level="INFO"/>
     <logger name="org.hibernate.type" level="INFO"/>
 
