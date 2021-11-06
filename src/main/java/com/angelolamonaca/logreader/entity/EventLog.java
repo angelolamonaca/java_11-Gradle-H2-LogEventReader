@@ -37,11 +37,16 @@ public class EventLog {
 
     @NonNull
     @JsonProperty
-    private String state;
+    private State state;
 
     @JsonProperty
     private String type;
 
     @JsonProperty
     private String host;
+
+    public enum State {
+        STARTED,
+        FINISHED
+    }
 }
