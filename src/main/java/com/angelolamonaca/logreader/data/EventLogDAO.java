@@ -11,8 +11,7 @@ import java.util.List;
  * @since 05/11/2021
  */
 public interface EventLogDAO {
-    EventLog getEventLog();
-    List<Event> getEvents();
-    List<EventLog> getEventLogs(String id);
+    Event getEvent();
     void addEventLog(EventLog eventLog);
+    int deleteEventLogById(String eventLogId);
 }

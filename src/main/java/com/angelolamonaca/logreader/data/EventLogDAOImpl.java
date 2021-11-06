@@ -9,7 +9,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import javax.persistence.TypedQuery;
-import java.util.List;
 
 /**
  * @author Angelo Lamonaca (https://www.angelolamonaca.com/)
@@ -24,31 +23,9 @@ public class EventLogDAOImpl implements EventLogDAO {
     private final SessionFactory sessionFactory;
 
     @Override
-    public EventLog getEventLog() {
+    public Event getEvent() {
         Session session = sessionFactory.openSession();
-        List<EventLog> eventLogs = null;
-        try {
-            session.beginTransaction();
-            log.debug("Attempting to load EventLog with id 0 from DB");
-            TypedQuery<EventLog> query = session.createNativeQuery("select * from EventLog e", EventLog.class);
-            query.setFirstResult(0);
-            query.setMaxResults(1);
-            eventLogs = query.getResultList();
-            session.getTransaction().commit();
-            log.debug("EventLog successful loaded from DB {}", eventLogs.get(0));
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
-        session.close();
-        assert eventLogs != null;
-        return eventLogs.get(0);
-    }
-
-    @Override
-    public List<Event> getEvents() {
-        Session session = sessionFactory.openSession();
-        List<Event> eventLogs = null;
-        List<Event> events = null;
+        Event event = null;
         try {
             session.beginTransaction();
             log.debug("Attempting to load EventLog from DB");
@@ -59,35 +36,21 @@ public class EventLogDAOImpl implements EventLogDAO {
                             "abs(extract(millisecond from (e.TIMESTAMP - el.TIMESTAMP))) as DURATION, " +
                             "abs(extract(millisecond from (e.TIMESTAMP - el.TIMESTAMP))) > 5  as ALERT " +
                             "from EVENTLOG e INNER JOIN EVENTLOG el ON e.EVENTLOGID=el.EVENTLOGID " +
-                            "where e.STATE=0 and el.STATE=1;", Event.class);
-            eventLogs = query.getResultList();
-//            events = eventLogs.stream().map(eventLog -> new Event(eventLog.getEventLogId())).collect(Collectors.toList());
+                            "where e.STATE=0 and el.STATE=1", Event.class);
+            query.setFirstResult(0);
+            query.setMaxResults(1);
+            if (query.getResultList().size()==0) {
+                log.debug("No more event logs in table EventLog");
+                return null;
+            }
+            event = query.getResultList().get(0);
             session.getTransaction().commit();
-            log.debug("EventLogs successful loaded from DB {}", eventLogs);
+            log.debug("Event successful loaded from DB {}", event);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
         session.close();
-        return eventLogs;
-    }
-
-    @Override
-    public List<EventLog> getEventLogs(String id) {
-        Session session = sessionFactory.openSession();
-        List<EventLog> eventLogs = null;
-        try {
-            session.beginTransaction();
-            log.debug("Attempting to load EventLog from DB");
-            TypedQuery<EventLog> query = session.createNativeQuery("select * from EventLog e where e.eventLogId= :eventLogId", EventLog.class);
-            query.setParameter("eventLogId", id);
-            eventLogs = query.getResultList();
-            session.getTransaction().commit();
-            log.debug("EventLogs successful loaded from DB {}", eventLogs);
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
-        session.close();
-        return eventLogs;
+        return event;
     }
 
     @Override
@@ -103,5 +66,25 @@ public class EventLogDAOImpl implements EventLogDAO {
             log.error(e.getMessage(), e);
         }
         session.close();
+    }
+
+    @Override
+    public int deleteEventLogById(String eventLogId) {
+        Session session = sessionFactory.openSession();
+        int deleted = 0;
+        try {
+            session.beginTransaction();
+            log.debug("Attempting to delete EventLog {} from DB", eventLogId);
+            TypedQuery<EventLog> query = session.createNativeQuery(
+                    "delete from EVENTLOG where EVENTLOGID=:eventLogId", EventLog.class);
+            query.setParameter("eventLogId", eventLogId);
+            deleted = query.executeUpdate();
+            session.getTransaction().commit();
+            log.debug("EventLog successful deleted from DB {}", eventLogId);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        session.close();
+        return deleted;
     }
 }

@@ -22,9 +22,15 @@ public class EventDAOImpl implements EventDAO {
     @Override
     public void addEvent(Event event) {
         Session session = sessionFactory.openSession();
+        try {
         session.beginTransaction();
+        log.debug("Attempting to insert Event {} into DB", event);
         session.persist(event);
         session.getTransaction().commit();
+            log.debug("Event successful saved in DB {}", event);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
         session.close();
     }
 }

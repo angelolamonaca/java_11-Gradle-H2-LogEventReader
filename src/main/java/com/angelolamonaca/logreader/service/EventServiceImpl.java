@@ -24,9 +24,8 @@ public class EventServiceImpl implements EventService {
         eventDAO.addEvent(event);
     }
 
-
     @Override
-    public List<Event> retrieveEvents() {
-        return eventLogDAO.getEvents();
+    public Event retrieveEvent() {
+        return eventLogDAO.getEvent();
     }
 }

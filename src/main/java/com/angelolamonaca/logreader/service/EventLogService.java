@@ -12,4 +12,5 @@ import java.util.List;
  */
 public interface EventLogService {
     void registerEventLog(EventLog eventLog);
+    int removeEventLogById(String eventLogId);
 }

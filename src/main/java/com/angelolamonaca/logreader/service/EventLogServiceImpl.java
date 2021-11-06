@@ -20,4 +20,10 @@ public class EventLogServiceImpl implements EventLogService {
     public void registerEventLog(EventLog eventLog) {
         eventLogDAO.addEventLog(eventLog);
     }
+
+
+    @Override
+    public int removeEventLogById(String eventLogId) {
+        return eventLogDAO.deleteEventLogById(eventLogId);
+    }
 }

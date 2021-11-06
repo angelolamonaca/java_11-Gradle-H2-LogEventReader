@@ -11,5 +11,5 @@ import java.util.List;
  */
 public interface EventService {
     void registerEvent(Event event);
-    List<Event> retrieveEvents();
+    Event retrieveEvent();
 }

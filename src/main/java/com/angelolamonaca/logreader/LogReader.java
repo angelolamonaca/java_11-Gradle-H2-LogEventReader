@@ -40,9 +40,16 @@ public class LogReader {
         }
     }
 
-    void calculateAndStoreEvents() {
+    String calculateAndStoreEvents() {
         EventServiceImpl eventService = new EventServiceImpl();
-        List<Event> eventLogs = eventService.retrieveEvents();
-        log.info(String.valueOf(eventLogs));
+        Event event = eventService.retrieveEvent();
+        if (event == null) return null;
+        eventService.registerEvent(event);
+        return event.getId();
+    }
+
+    int removeEventLogFromDatabase(String eventLogId) {
+        EventLogServiceImpl eventLogService = new EventLogServiceImpl();
+        return eventLogService.removeEventLogById(eventLogId);
     }
 }
