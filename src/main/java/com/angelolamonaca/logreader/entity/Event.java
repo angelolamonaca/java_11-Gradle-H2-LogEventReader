@@ -11,6 +11,7 @@ import javax.persistence.Id;
  * @version 1.0
  * @since 18/10/2021
  */
+@ToString
 @Entity
 @Getter
 @NoArgsConstructor

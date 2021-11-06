@@ -20,16 +20,19 @@ public class LogReader {
 
 
     void storeLogsToDatabase(String logFilePath) {
-        log.debug("Storing logs to database");
-        LogFileServiceImpl logFileService = new LogFileServiceImpl(logFileExecutorService);
-        logFileService.storeLogs(logFilePath);
-        logFileExecutorService.shutdown();
         try {
+            LogFileServiceImpl logFileService = new LogFileServiceImpl(logFileExecutorService);
+            logFileService.storeLogs(logFilePath);
+            logFileExecutorService.shutdown();
             if (!logFileExecutorService.awaitTermination(1, TimeUnit.HOURS)) {
                 logFileExecutorService.shutdownNow();
             }
         } catch (InterruptedException e) {
             log.error(e.getMessage(), e);
         }
+    }
+
+    void calculateAndStoreEvents() {
+        log.info("CIAO");
     }
 }

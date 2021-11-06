@@ -15,6 +15,7 @@ import java.sql.Timestamp;
  * @version 1.0
  * @since 19/10/2021
  */
+@ToString
 @Entity
 @Getter
 @NoArgsConstructor

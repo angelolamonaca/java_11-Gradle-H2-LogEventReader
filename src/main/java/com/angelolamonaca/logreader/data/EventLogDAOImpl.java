@@ -24,13 +24,15 @@ public class EventLogDAOImpl implements EventLogDAO {
     @Override
     public void addEventLog(String eventLogAsString) {
         Session session = sessionFactory.openSession();
-        session.beginTransaction();
         try {
-            log.debug("Mapping EventLog object from string log");
+            session.beginTransaction();
+            log.debug("Mapping EventLog object from string log {}", eventLogAsString);
             EventLog eventLog = new ObjectMapper().readValue(eventLogAsString, EventLog.class);
+            log.debug("Attempting to insert EventLog {} into DB", eventLog);
             session.persist(eventLog);
             session.getTransaction().commit();
-        } catch (JsonProcessingException e) {
+            log.debug("EventLog successful saved in DB {}", eventLog);
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
         session.close();

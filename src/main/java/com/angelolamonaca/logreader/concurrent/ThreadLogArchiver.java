@@ -15,16 +15,26 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @NoArgsConstructor
 @RequiredArgsConstructor
-public class RunnableLogArchiver implements Runnable {
-
+public class ThreadLogArchiver extends Thread {
     EventLogDAOImpl eventLogDAO = new EventLogDAOImpl(HibernateUtil.getSessionFactory());
 
     @NonNull
     private String eventLogAsString;
 
+    @NonNull
+    private String threadName;
+
     @Override
     public void run() {
-        log.debug("Starting new thread {}", this);
+        log.debug("Starting {}", this);
         eventLogDAO.addEventLog(this.eventLogAsString);
+    }
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + ", " +
+                super.toString() + ", " +
+                "id: " + super.getId() + ", " +
+                "thread name: " + threadName;
     }
 }

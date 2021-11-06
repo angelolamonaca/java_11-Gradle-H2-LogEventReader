@@ -1,6 +1,6 @@
 package com.angelolamonaca.logreader.service;
 
-import com.angelolamonaca.logreader.concurrent.RunnableLogArchiver;
+import com.angelolamonaca.logreader.concurrent.ThreadLogArchiver;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ public class LogFileServiceImpl implements LogFileService {
 
     @Override
     public void storeLogs(String logFilePath) {
-        log.debug("Scanning file");
+        log.debug("Scanning file from {}", logFilePath);
         scanFile(logFilePath);
     }
 
@@ -41,12 +41,11 @@ public class LogFileServiceImpl implements LogFileService {
             inputStream = new FileInputStream(logFilePath);
             scanner = new Scanner(inputStream, StandardCharsets.UTF_8);
             StringBuilder eventLogAsString = new StringBuilder();
-            log.debug("Reading logs from file");
+            log.debug("Reading logs from file {}", file);
             while (scanner.hasNextLine()) {
                 String eventLogLine = scanner.nextLine();
                 eventLogAsString.append(eventLogLine);
                 if (eventLogAsString.toString().contains("}")) {
-                    log.debug("Starting log archiver thread for {}", eventLogAsString);
                     runLogArchiverThread(eventLogAsString.toString());
                     eventLogAsString.setLength(0);
                 }
@@ -71,7 +70,8 @@ public class LogFileServiceImpl implements LogFileService {
     }
 
     private void runLogArchiverThread(String eventLogAsString) {
-        RunnableLogArchiver runnableLogArchiver = new RunnableLogArchiver(eventLogAsString);
-        logFileExecutorService.submit(runnableLogArchiver);
+        ThreadLogArchiver threadLogArchiver = new ThreadLogArchiver(eventLogAsString, "Thread Log Archiver");
+        logFileExecutorService.submit(threadLogArchiver);
+        log.debug("Submitted new {} for {}", threadLogArchiver, eventLogAsString);
     }
 }

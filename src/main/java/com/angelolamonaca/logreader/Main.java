@@ -27,8 +27,9 @@ public class Main {
     }
 
     static void executeLogReader(String logFilePath) {
-        log.debug("Executing LogReader");
         LogReader logReader = new LogReader();
+        log.debug("Executing LogReader {}", logReader);
         logReader.storeLogsToDatabase(logFilePath);
+        logReader.calculateAndStoreEvents();
     }
 }
