@@ -6,7 +6,7 @@ package com.angelolamonaca.logreader.service;
  * @since 19/10/2021
  */
 public interface LogFileService {
-    void storeLogs(String logFilePath);
-
     void scanFile(String logFilePath);
+
+    void storeLogs(String logFilePath);
 }

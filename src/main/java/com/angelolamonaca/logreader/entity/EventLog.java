@@ -15,6 +15,7 @@ import java.sql.Timestamp;
  * @version 1.0
  * @since 19/10/2021
  */
+@ToString
 @Entity
 @Getter
 @NoArgsConstructor
@@ -36,11 +37,16 @@ public class EventLog {
 
     @NonNull
     @JsonProperty
-    private String state;
+    private State state;
 
     @JsonProperty
     private String type;
 
     @JsonProperty
     private String host;
+
+    public enum State {
+        STARTED,
+        FINISHED
+    }
 }

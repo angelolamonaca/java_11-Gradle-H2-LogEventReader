@@ -14,6 +14,7 @@ public class Main {
     public static void main(String... args) {
         // String logFilePath = askForLogFilePath();
         String logFilePath = "src/main/resources/log";
+        log.info("Log file path: {}", logFilePath);
         executeLogReader(logFilePath);
     }
 
@@ -27,6 +28,8 @@ public class Main {
 
     static void executeLogReader(String logFilePath) {
         LogReader logReader = new LogReader();
+        log.debug("Executing LogReader {}", logReader);
         logReader.storeLogsToDatabase(logFilePath);
+        logReader.calculateAndStoreEvents();
     }
 }

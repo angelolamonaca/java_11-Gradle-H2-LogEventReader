@@ -10,6 +10,7 @@
         <property name="hibernate.connection.password">sa</property>
         <property name="hibernate.connection.pool_size">42</property>
         <property name="hibernate.show_sql">false</property>
+        <property name="hibernate.format_sql">false</property>
         <property name="hibernate.hbm2ddl.auto">create</property>
     </session-factory>
 </hibernate-configuration>
