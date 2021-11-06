@@ -14,6 +14,7 @@ import javax.persistence.Id;
 @ToString
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor

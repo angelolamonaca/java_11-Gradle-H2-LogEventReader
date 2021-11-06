@@ -30,6 +30,13 @@ public class Main {
         LogReader logReader = new LogReader();
         log.debug("Executing LogReader {}", logReader);
         logReader.storeLogsToDatabase(logFilePath);
-        logReader.calculateAndStoreEvents();
+        while (true) {
+            String eventId = logReader.calculateAndStoreEvents();
+            if (eventId==null) {
+                log.debug("Exiting...");
+                break;
+            }
+            logReader.removeEventLogFromDatabase(eventId);
+        }
     }
 }
