@@ -26,6 +26,18 @@ public class LogReader {
     int hibernatePoolSize = Integer.parseInt(HibernateUtil.getProperties().getProperty("hibernate.connection.pool_size"));
     ExecutorService logFileExecutorService = Executors.newFixedThreadPool(hibernatePoolSize);
 
+    void execute(String logFilePath) {
+        log.debug("Executing LogReader {}", this);
+        storeLogsToDatabase(logFilePath);
+        while (true) {
+            String eventId = calculateAndStoreEvents();
+            if (eventId==null) {
+                log.debug("Exiting...");
+                break;
+            }
+            removeEventLogFromDatabase(eventId);
+        }
+    }
 
     void storeLogsToDatabase(String logFilePath) {
         try {
